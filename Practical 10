@@ -3,9 +3,9 @@
 #include <climits>
 using namespace std;
 
-// Function to find the vertex with minimum distance value
+// Find vertex with minimum distance
 int minDistance(vector<int> &dist, vector<bool> &visited, int V) {
-    int min = INT_MAX, min_index;
+    int min = INT_MAX, min_index = -1;
 
     for (int v = 0; v < V; v++) {
         if (!visited[v] && dist[v] <= min) {
@@ -16,25 +16,27 @@ int minDistance(vector<int> &dist, vector<bool> &visited, int V) {
     return min_index;
 }
 
-// Function to print distances
+// Print distances
 void printDistances(vector<int> &dist, int V) {
     cout << "Vertex \t Distance from Source\n";
     for (int i = 0; i < V; i++)
         cout << i << " \t " << dist[i] << "\n";
 }
 
-// Function that implements Dijkstra's Algorithm
-void dijkstra(vector<vector<int>> &graph, int src, int V) {
-    vector<int> dist(V, INT_MAX); // Shortest distance from src to i
-    vector<bool> visited(V, false); // True if vertex included in shortest path tree
+// Dijkstra Algorithm
+void dijkstra(vector<vector<int> > &graph, int src, int V) {
+    vector<int> dist(V, INT_MAX);
+    vector<bool> visited(V, false);
 
-    dist[src] = 0; // Distance from source to itself is 0
+    dist[src] = 0;
 
     for (int count = 0; count < V - 1; count++) {
-        int u = minDistance(dist, visited, V); // Pick minimum distance vertex
+        int u = minDistance(dist, visited, V);
+
+        if (u == -1) break; // safety check
+
         visited[u] = true;
 
-        // Update distance of adjacent vertices
         for (int v = 0; v < V; v++) {
             if (!visited[v] && graph[u][v] && dist[u] != INT_MAX &&
                 dist[u] + graph[u][v] < dist[v]) {
@@ -51,7 +53,8 @@ int main() {
     cout << "Enter number of vertices: ";
     cin >> V;
 
-    vector<vector<int>> graph(V, vector<int>(V));
+    vector<vector<int> > graph(V, vector<int>(V)); // fixed
+
     cout << "Enter adjacency matrix (0 if no edge):\n";
     for (int i = 0; i < V; i++)
         for (int j = 0; j < V; j++)
@@ -65,17 +68,9 @@ int main() {
 
     return 0;
 }
-/*Enter number of vertices: 5
-Enter adjacency matrix (0 if no edge):
-0 10 0 5 0
-0 0 1 2 0
-0 0 0 0 4
-0 3 9 0 2
-7 0 6 0 0
-Enter source vertex: 0
-Vertex   Distance from Source
-0        0
-1        8
-2        9
-3        5
-4        7*/
+/* 4
+0 1 4 0
+1 0 2 6
+4 2 0 3
+0 6 3 0
+0 */
